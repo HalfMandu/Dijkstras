@@ -1,0 +1,16 @@
+{
+  "name": "Dijkstras",
+  "version": "1.0.0",
+  "description": "dijkstras",
+  "main": "dijkstras.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dijkstras.js"
+  },
+  "author": "sr",
+  "license": "ISC",
+  "dependencies": {
+    "util": "^0.12.4"
+  }
+}
