@@ -20,6 +20,7 @@ import { MinHeap } from "./MinHeap.js";
 import { LinkedList } from "./LinkedList.js"; 
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
+const { performance } = require('perf_hooks');
 const util = require('util');
 const fs = require('fs');
 	
@@ -67,9 +68,9 @@ class Dijkstra {
 				let neighbor = current.value.tail;
 				if (!explored[neighbor]) {
 					explored.add(neighbor);
-					if (Number(current.value.dist) + Number(dists[vert]) < dists[neighbor]){
-						dists[neighbor] = Number(current.value.dist) + Number(dists[vert]);
-						minHeap.decreaseKey(Number(neighbor), dists[neighbor]);
+					if (current.value.dist + dists[vert] < dists[neighbor]){
+						dists[neighbor] = current.value.dist + dists[vert];
+						minHeap.decreaseKey(neighbor, dists[neighbor]);
 					}
 				}
 				current = current.next;
@@ -164,7 +165,7 @@ const parseFile = async (file) => {
 		
 		//map the vertex to its edges
 		edges.forEach(edge => {
-			graph.addEdge(vert.tail, edge.tail, edge.dist);
+			graph.addEdge(Number(vert.tail), Number(edge.tail), Number(edge.dist));
 		});
 		
 	});
@@ -194,8 +195,13 @@ parseFile('./dijkstraData.txt').then((graph) => {
 	
 	const dijkstra = new Dijkstra(graph);
 	const startVert = 1;
+	const startTime = performance.now();
 	
 	dijkstra.dijkstras(startVert); 
+	
+	const endTime = performance.now();
+	
+	console.log(`Dijkstras took ${endTime - startTime} milliseconds`);   // ~ 4.17 milliseconds
 	
 });
 
