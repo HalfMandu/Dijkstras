@@ -1,6 +1,6 @@
 /* 
 	Stephen Rinkus 
-	Dijkstra's shortest-path algorithm
+	Dijkstra's shortest-path algorithm - O(mlogn)
 	
 	Graph 1:             				Graph 2: 
 	                                    
@@ -65,25 +65,29 @@ class Dijkstra {
 			//traverse all adjacent verts and update distances where needed
 			let current = neighbors.head;
 			while (current) {
-				let neighbor = current.value.tail;
+				const neighbor = current.value.tail;
 				if (!explored[neighbor]) {
 					explored.add(neighbor);
-					if (current.value.dist + dists[vert] < dists[neighbor]){
-						dists[neighbor] = current.value.dist + dists[vert];
-						minHeap.decreaseKey(neighbor, dists[neighbor]);
+					if (Number(current.value.dist) + Number(dists[vert]) < dists[neighbor]){
+						dists[neighbor] = Number(current.value.dist) + Number(dists[vert]);
+						minHeap.decreaseKey(Number(neighbor), dists[neighbor]);
 					}
 				}
 				current = current.next;
 			}  
 		}  
+	
+		console.log("Dist : " + JSON.stringify(dists));
+		console.log("Explored : " + [...explored]);
+		console.log("MinHeap indices tracker : " + JSON.stringify(minHeap.vertLocs));
+		console.log("MinHeap : " + JSON.stringify(minHeap.heap));
 		
-		//review the results
-		const destinations = [7,37,59,82,99,115,133,165,188,197];
-		let result = "";
-		for (let dest of destinations) {
-			result = [...result, (dists[dest])];
+		const dests = [7,37,59,82,99,115,133,165,188,197];
+		let res = "";
+		for (const dest of dests) {
+			res = res + "," + (dists[dest]);
 		}
-		console.log(result); 
+		console.log(res); 
 
 	}
 	
@@ -114,7 +118,7 @@ class Graph {
 		this.addVertex(v1);
 		this.addVertex(v2);
 
-		let edge = new Edge(v2, dist);
+		const edge = new Edge(v2, dist);
 		this.vertices.get(v1).insertAt(edge, 0);
 		
 		return null;
@@ -123,7 +127,7 @@ class Graph {
 	//Walk through each key in the vertices map, and print its linked list of neighbors
 	printGraph() {
 		console.log(this.graphType + " GRAPH: ");
-		for (let [vertex] of this.vertices){
+		for (const [vertex] of this.vertices){
 			console.log(Number(vertex));
 			this.vertices.get(vertex).print();
 		}
@@ -165,13 +169,14 @@ const parseFile = async (file) => {
 		
 		//map the vertex to its edges
 		edges.forEach(edge => {
-			graph.addEdge(Number(vert.tail), Number(edge.tail), Number(edge.dist));
+			graph.addEdge(vert.tail, edge.tail, edge.dist);
 		});
 		
 	});
 
 	return graph;
 }; 
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //Driver
